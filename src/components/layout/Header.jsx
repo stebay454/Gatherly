@@ -7,7 +7,7 @@ export default function Header({isDark,toggleTheme}){
              <h2 className="font-instrument text-light-text dark:text-dark-text mx-auto">Event tickets.</h2>
             </div>
             <div className="font-manrope bg-light-sheet dark:bg-dark-sheet py-4 px-4 rounded-4xl ml-auto border-2 border-light-border dark:border-dark-border flex  gap-3">
-              <p className='text-light-text dark:text-dark-text'>help(h)</p>
+              <p className='text-light-text dark:text-dark-text'>help(?)</p>
               <button className='cursor-pointer my-auto' onClick={toggleTheme} aria-label='Toggle page theme'>
                 {isDark ?(<FiSun className='text-dark-text'/>) :(<FiMoon className='dark:text-dark-text' />)}
                 </button>
