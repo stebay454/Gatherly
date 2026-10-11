@@ -1,0 +1,30 @@
+@import url('https://fonts.googleapis.com/css2?family=Lora:ital,wght@0,400..700;1,400..700&family=Manrope:wght@200..800&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Instrument+Serif:ital@0;1&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Inter:ital,opsz,wght@0,14..32,100..900;1,14..32,100..900&display=swap');
+@import "tailwindcss";
+@custom-variant dark (&:where(.dark, .dark *));
+
+@theme {
+    --font-lora: "Lora", cursive;
+    --font-manrope: "Manrope", serif;
+    --font-instrument: "Instrument Serif",serif;
+    --font-inter: "Inter",serif;
+    
+    /*light mode color palette*/
+    --color-light-background: #E4E0D2;
+    --color-light-sheet: #F3EFE4;
+    --color-light-text: #1F1D18;
+    --color-light-label: #6B665A;
+    --color-light-border: #CFC9B8;
+    --color-light-accent: #B5532A;
+    --color-light-error: #B3261E;
+
+    /*dark mode color palette*/
+    --color-dark-background: #1A1814;
+    --color-dark-sheet: #26231D;
+    --color-dark-text: #EDE8DA;
+    --color-dark-label: #A39D8C;
+    --color-dark-border: #3A362D;
+    --color-dark-accent: #E08A5C;
+    --color-dark-error: #F2877F;
+}
