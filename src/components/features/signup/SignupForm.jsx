@@ -28,7 +28,7 @@ const registrationSchema = z.object({
 
     country: z
     .string()
-    .min(1,'choose a country')
+    .min(1,'Choose a country')
 })
 
 .refine((data)=> data.password === data.confirmPassword, {
@@ -85,11 +85,11 @@ export default function SignupForm(){
             {...register("confirmPassword")}
             />
               <Controller 
-            name='country:'
+            name='country'
             control={control}
             render={({field}) =>(
-              <SelectField {...field} label='Country: ' options={countries}   error={errors.country?.message} />
-            )}
+            <SelectField {...field} label='country' options={countries}  error={errors.country?.message} />
+          )}
             />
             <button className='font-manrope py-2 px-2 rounded-lg mt-2 bg-light-accent dark:bg-dark-accent text-dark-text' type='submit'>Submit</button>
           </form>

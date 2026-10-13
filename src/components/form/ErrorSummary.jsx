@@ -19,11 +19,11 @@ export default function ErrorSummary({errors,submitCount,onFocusField}){
   }
   return(
      <div ref={containerRef} tabIndex={-1}>
-       <h2>Please fix {errorList.length} {errorList.length===1 ? 'problem' : 'problems'}</h2>
-       <ul>
+       <h2 className='font-manrope text-light-error dark:text-dark-error'>Please fix {errorList.length} {errorList.length===1 ? 'problem' : 'problems'}</h2>
+       <ul className='font-manrope text-light-error dark:text-dark-error'>
         {errorList.map(({name, message}) => (
           <li key={name}>
-           <button type='button' onClick={()=>onFocusField(name)}>{message}</button>
+           <button type='button' onClick={()=>onFocusField(name)}> - {message}</button>
           </li>
         ))}
        </ul>
