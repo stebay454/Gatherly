@@ -42,7 +42,7 @@ export default function FileField({label,hint,onChange,file,error,...rest}){
       {previewUrl && (
         <img 
          src={previewUrl}
-         alt='Avatar preview'
+         alt='profile preview'
          className='w-14 h-14 rounded-full border-2 border-light-border dark:border-dark-border object-cover mt-2'
         />
        )}

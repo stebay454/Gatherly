@@ -7,6 +7,16 @@ import FileField from '../../form/FileField.jsx';
 import Sheet from '../../layout/Sheet.jsx';
 import ErrorSummary from '../../form/ErrorSummary.jsx';
 
+const countries = [
+      {name: 'Ethiopia'},
+      {name: 'Egypt'},
+      {name: 'Kenya'},
+      {name: 'Rwanda'},
+      {name: 'Other'}
+    ]
+
+const allowedFileType = ["image/jpeg","image/jpg","image/png", "image/webp"];
+const maxFileSize = 2 * 1024 * 1024;
 /*defining schema in zod */
 const registrationSchema = z.object({
     username:z
@@ -31,20 +41,26 @@ const registrationSchema = z.object({
     .string()
     .min(1,'Choose a country'),
 
-    avatar:z.any().optional(),
+    avatar:z
+    .instanceof(File)
+    .refine((file)=> Boolean(file), {
+      message:'Avatar file is required',
+    })
+
+    .refine((file)=> allowedFileType.includes(file?.type),{
+      message: "Only .jpg .jpeg .png and .webp formats are supported",
+    })
+
+    .refine((file)=> file?.size <= maxFileSize, {
+      message: "Max file size is 2MB",
+    })
+    
 })
 
 .refine((data)=> data.password === data.confirmPassword, {
   message:"password do not match",
   path: ["confirmPassword"],
 })
-const countries = [
-      {name: 'Ethiopia'},
-      {name: 'Egypt'},
-      {name: 'Kenya'},
-      {name: 'Rwanda'},
-      {name: 'Other'}
-    ]
 export default function SignupForm(){
     const {register,control, handleSubmit,setFocus, formState: {errors,submitCount}} = useForm({
       resolver: zodResolver(registrationSchema),
@@ -99,7 +115,7 @@ export default function SignupForm(){
              name="avatar"
              control={control}
              render={({ field: { value, ...restField }}) => (
-              <FileField {...restField} file={value} label='picture' error={errors.avatar?.message} />
+              <FileField {...restField} file={value} label='Profile picture' error={errors.avatar?.message} />
              )}
             />
             <button className='font-manrope py-2 px-2 rounded-lg mt-2 bg-light-accent dark:bg-dark-accent text-dark-text' type='submit'>Submit</button>
