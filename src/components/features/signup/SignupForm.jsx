@@ -6,7 +6,7 @@ import SelectField from '../../form/SelectField.jsx';
 import FileField from '../../form/FileField.jsx';
 import Sheet from '../../layout/Sheet.jsx';
 import ErrorSummary from '../../form/ErrorSummary.jsx';
-
+import checkEmailTaken from '../../../api/fakeApi.js';
 const countries = [
       {name: 'Ethiopia'},
       {name: 'Egypt'},
@@ -17,6 +17,7 @@ const countries = [
 
 const allowedFileType = ["image/jpeg","image/jpg","image/png", "image/webp"];
 const maxFileSize = 2 * 1024 * 1024;
+
 /*defining schema in zod */
 const registrationSchema = z.object({
     username:z
@@ -27,8 +28,15 @@ const registrationSchema = z.object({
     email:z
     .string()
     .min(1,"Email is required")
-    .email("Invalid email address"),
-    
+    .email("Invalid email address")
+    .refine(async (email)=> {
+      if (!email || !/^\S+@\S+\.\S+$/.test(email)) return true;
+       const isTaken = await checkEmailTaken(email);
+      return !isTaken;
+    },{
+      message:"That email address is already registered"
+    }),
+
     password:z
     .string()
     .min(6,"password must be atleast 6 characters"),
@@ -42,9 +50,8 @@ const registrationSchema = z.object({
     .min(1,'Choose a country'),
 
     avatar:z
-    .instanceof(File)
-    .refine((file)=> Boolean(file), {
-      message:'Avatar file is required',
+    .instanceof(Blob,{
+      message: 'Profile picture is required',
     })
 
     .refine((file)=> allowedFileType.includes(file?.type),{
@@ -64,6 +71,7 @@ const registrationSchema = z.object({
 export default function SignupForm(){
     const {register,control, handleSubmit,setFocus, formState: {errors,submitCount}} = useForm({
       resolver: zodResolver(registrationSchema),
+      mode: 'onTouched',
         defaultValues: {
          username: '',
          email: '',
