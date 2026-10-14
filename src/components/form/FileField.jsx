@@ -1,12 +1,27 @@
+import {useState,useEffect} from 'react';
 import Field from "./Field.jsx";
-export default function FileField({label,hint,onChange,error,...rest}){
+export default function FileField({label,hint,onChange,file,error,...rest}){
+  const [previewUrl,setPreviewUrl] = useState('');
+  useEffect(()=>{
+    if (!file) {
+      setPreviewUrl("");
+      return;
+    }
+    const objectUrl = URL.createObjectURL(file);
+    setPreviewUrl(objectUrl);
+    return () => {
+      URL.revokeObjectURL(objectUrl);
+    }
+  },[file]);
+
   const handleChange = (event) => {
-    const file = event.target.files[0];
-    if (onChange && file) {
-      onChange(file);
+    const chosenFile = event.target.files[0];
+    if (onChange) {
+      onChange(chosenFile);
     }
   };
     return(
+      <div>
       <Field
        label={label}
         hint={hint}
@@ -23,6 +38,14 @@ export default function FileField({label,hint,onChange,error,...rest}){
            accept="image/*"
           />
        )}
-      </Field> 
+      </Field>
+      {previewUrl && (
+        <img 
+         src={previewUrl}
+         alt='Avatar preview'
+         className='w-14 h-14 rounded-full border-2 border-light-border dark:border-dark-border object-cover mt-2'
+        />
+       )}
+      </div> 
     );
 }

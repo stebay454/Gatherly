@@ -98,8 +98,8 @@ export default function SignupForm(){
             <Controller 
              name="avatar"
              control={control}
-             render={({ field: { value, ...restField }, fieldState, formState }) => (
-              <FileField {...restField} label='picture' error={errors.avatar?.message} />
+             render={({ field: { value, ...restField }}) => (
+              <FileField {...restField} file={value} label='picture' error={errors.avatar?.message} />
              )}
             />
             <button className='font-manrope py-2 px-2 rounded-lg mt-2 bg-light-accent dark:bg-dark-accent text-dark-text' type='submit'>Submit</button>
