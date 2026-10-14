@@ -3,6 +3,7 @@ import {zodResolver} from '@hookform/resolvers/zod';
 import {z} from 'zod';
 import TextField from '../../form/TextField.jsx';
 import SelectField from '../../form/SelectField.jsx';
+import FileField from '../../form/FileField.jsx';
 import Sheet from '../../layout/Sheet.jsx';
 import ErrorSummary from '../../form/ErrorSummary.jsx';
 
@@ -28,7 +29,9 @@ const registrationSchema = z.object({
 
     country: z
     .string()
-    .min(1,'Choose a country')
+    .min(1,'Choose a country'),
+
+    avatar:z.any().optional(),
 })
 
 .refine((data)=> data.password === data.confirmPassword, {
@@ -50,7 +53,8 @@ export default function SignupForm(){
          email: '',
          password: '',
          confirmPassword: '',
-         country: ''
+         country: '',
+         avatar: undefined
         },
         shouldFocusError: false
     })
@@ -90,6 +94,13 @@ export default function SignupForm(){
             render={({field}) =>(
             <SelectField {...field} label='country' options={countries}  error={errors.country?.message} />
           )}
+            />
+            <Controller 
+             name="avatar"
+             control={control}
+             render={({ field: { value, ...restField }, fieldState, formState }) => (
+              <FileField {...restField} label='picture' error={errors.avatar?.message} />
+             )}
             />
             <button className='font-manrope py-2 px-2 rounded-lg mt-2 bg-light-accent dark:bg-dark-accent text-dark-text' type='submit'>Submit</button>
           </form>
