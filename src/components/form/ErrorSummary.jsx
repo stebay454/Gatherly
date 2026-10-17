@@ -3,7 +3,7 @@ import {useRef,useEffect} from 'react';
 export default function ErrorSummary({errors,submitCount,onFocusField}){
   const containerRef = useRef(null);
   const errorList = Object.entries(errors || {})
-  .filter(([_,error]) => Boolean(error))
+  .filter(([name,error]) => Boolean(error) && name!== 'root')
   .map(([name,error]) => ({
     name,
     message: typeof error === 'string' ? error : error.message,

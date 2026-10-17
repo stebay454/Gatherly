@@ -4,9 +4,11 @@ import {z} from 'zod';
 import TextField from '../../form/TextField.jsx';
 import SelectField from '../../form/SelectField.jsx';
 import FileField from '../../form/FileField.jsx';
+import FormError from '../../form/FormError.jsx';
 import Sheet from '../../layout/Sheet.jsx';
 import ErrorSummary from '../../form/ErrorSummary.jsx';
 import checkEmailTaken from '../../../api/fakeApi.js';
+import {submitSignup} from '../../../api/fakeApi.js';
 const countries = [
       {name: 'Ethiopia'},
       {name: 'Egypt'},
@@ -34,7 +36,7 @@ const registrationSchema = z.object({
        const isTaken = await checkEmailTaken(email);
       return !isTaken;
     },{
-      message:"That email address is already registered"
+      message:"That email is already registered"
     }),
 
     password:z
@@ -69,7 +71,7 @@ const registrationSchema = z.object({
   path: ["confirmPassword"],
 })
 export default function SignupForm(){
-    const {register,control, handleSubmit,setFocus, formState: {errors,submitCount}} = useForm({
+    const {register,control, handleSubmit,setError,setFocus, formState: {errors,submitCount,isSubmitting}} = useForm({
       resolver: zodResolver(registrationSchema),
       mode: 'onTouched',
         defaultValues: {
@@ -82,9 +84,27 @@ export default function SignupForm(){
         },
         shouldFocusError: false
     })
-    function onValid(data){
-      console.log(data);
+     const onValid = async (data) => {
+    try {
+      await submitSignup(data);
+      console.log("Success! Account created smoothly.");
+    } catch (error) {
+      if (error.status === 409) {
+        // Map 409 conflict exceptions onto the username input field path
+        setError("username", {
+          type: "server",
+          message: error.message
+        });
+     
+      } else {
+        setError("root.server",{
+          type:"server",
+          message: 'Something went wrong, try again'
+        })
+        console.error("General submission failure caught:", error);
+      }
     }
+  };
     return(
         <Sheet>
           <ErrorSummary errors={errors} submitCount={submitCount} onFocusField={setFocus}/>
@@ -126,7 +146,8 @@ export default function SignupForm(){
               <FileField {...restField} file={value} label='Profile picture' error={errors.avatar?.message} />
              )}
             />
-            <button className='font-manrope py-2 px-2 rounded-lg mt-2 bg-light-accent dark:bg-dark-accent text-dark-text' type='submit'>Submit</button>
+            <FormError message={errors.root?.server?.message}/>
+            <button disabled={isSubmitting} className='font-manrope py-2 px-2 rounded-lg mt-2 bg-light-accent dark:bg-dark-accent text-dark-text cursor-pointer disabled:cursor-not-allowed' type='submit'>{isSubmitting ?'creating account...': 'Register'}</button>
           </form>
         </Sheet>
     );
