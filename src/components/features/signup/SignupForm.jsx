@@ -1,9 +1,11 @@
+import {useState} from 'react';
 import {useForm,Controller} from 'react-hook-form';
 import {zodResolver} from '@hookform/resolvers/zod';
 import {z} from 'zod';
 import TextField from '../../form/TextField.jsx';
 import SelectField from '../../form/SelectField.jsx';
 import FileField from '../../form/FileField.jsx';
+import SignupSuccess from '../../form/SignupSuccess.jsx';
 import FormError from '../../form/FormError.jsx';
 import Sheet from '../../layout/Sheet.jsx';
 import ErrorSummary from '../../form/ErrorSummary.jsx';
@@ -71,6 +73,7 @@ const registrationSchema = z.object({
   path: ["confirmPassword"],
 })
 export default function SignupForm(){
+  const [createdUsername,setCreatedUsername] = useState(null);
     const {register,control, handleSubmit,setError,setFocus, formState: {errors,submitCount,isSubmitting}} = useForm({
       resolver: zodResolver(registrationSchema),
       mode: 'onTouched',
@@ -87,7 +90,7 @@ export default function SignupForm(){
      const onValid = async (data) => {
     try {
       await submitSignup(data);
-      console.log("Success! Account created smoothly.");
+      setCreatedUsername(data.username);
     } catch (error) {
       if (error.status === 409) {
         // Map 409 conflict exceptions onto the username input field path
@@ -107,6 +110,9 @@ export default function SignupForm(){
   };
     return(
         <Sheet>
+          {createdUsername !== null ? <SignupSuccess username={createdUsername} /> 
+          :
+          <>
           <ErrorSummary errors={errors} submitCount={submitCount} onFocusField={setFocus}/>
           <form noValidate onSubmit={handleSubmit(onValid)}> 
             <TextField
@@ -149,6 +155,8 @@ export default function SignupForm(){
             <FormError message={errors.root?.server?.message}/>
             <button disabled={isSubmitting} className='font-manrope py-2 px-2 rounded-lg mt-2 bg-light-accent dark:bg-dark-accent text-dark-text cursor-pointer disabled:cursor-not-allowed' type='submit'>{isSubmitting ?'creating account...': 'Register'}</button>
           </form>
+          </>
+}
         </Sheet>
     );
 }
