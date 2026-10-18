@@ -26,8 +26,8 @@ const maxFileSize = 2 * 1024 * 1024;
 const registrationSchema = z.object({
     username:z
     .string()
-    .min(3,"username at least must be 3 characters")
-    .max(30,"username must be 30 chracters or less"),
+    .min(3,"Username at least must be 3 characters")
+    .max(30,"Username must be 30 characters or less"),
 
     email:z
     .string()
@@ -72,7 +72,7 @@ const registrationSchema = z.object({
   message:"Passwords do not match",
   path: ["confirmPassword"],
 })
-export default function SignupForm(){
+export default function SignupForm({onNavigate}){
   const [createdUsername,setCreatedUsername] = useState(null);
     const {register,control, handleSubmit,setError,setFocus, formState: {errors,submitCount,isSubmitting}} = useForm({
       resolver: zodResolver(registrationSchema),
@@ -110,7 +110,7 @@ export default function SignupForm(){
   };
     return(
         <Sheet title={createdUsername == null ?'Sign up.':`Welcome ${createdUsername}`}>
-          {createdUsername !== null ? <SignupSuccess  /> 
+          {createdUsername !== null ? <SignupSuccess onContinue={onNavigate} /> 
           :
           <>
           <ErrorSummary errors={errors} submitCount={submitCount} onFocusField={setFocus}/>
@@ -118,7 +118,7 @@ export default function SignupForm(){
             <TextField
              label="User Name:" 
              error={errors.username?.message}
-             autoComplete='on'
+             autoComplete='username'
              {...register("username")}
             />
             <TextField
@@ -132,14 +132,14 @@ export default function SignupForm(){
             type='password'
              label="Password:"
              error={errors.password?.message}
-             autoComplete='on'
+             autoComplete='new-password'
              {...register("password")}
             />
             <TextField 
             type='password'
             label='Confirm Password:'
             error={errors.confirmPassword?.message}
-            autoComplete='on'
+            autoComplete='new-password'
             {...register("confirmPassword")}
             />
               <Controller 
@@ -157,7 +157,7 @@ export default function SignupForm(){
              )}
             />
             <FormError message={errors.root?.server?.message}/>
-            <button disabled={isSubmitting} className='font-manrope py-2 px-2 rounded-lg mt-2 bg-light-accent dark:bg-dark-accent text-dark-text cursor-pointer disabled:cursor-not-allowed' type='submit'>{isSubmitting ?'creating account...': 'Register'}</button>
+            <button disabled={isSubmitting} className='font-manrope py-2 px-2 rounded-lg mt-2 bg-light-accent text-dark-text cursor-pointer disabled:cursor-not-allowed' type='submit'>{isSubmitting ?'Creating account...': 'Register'}</button>
           </form>
           </>
 }
