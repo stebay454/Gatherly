@@ -36,6 +36,7 @@ export default function FileField({label,hint,onChange,file,error,...rest}){
            aria-invalid={invalid}
            aria-describedby={describedBy}
            accept="image/*"
+           className='border-2 border-light-label dark:border-dark-label rounded-lg'
           />
        )}
       </Field>

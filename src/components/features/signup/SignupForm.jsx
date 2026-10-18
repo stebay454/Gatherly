@@ -5,7 +5,7 @@ import {z} from 'zod';
 import TextField from '../../form/TextField.jsx';
 import SelectField from '../../form/SelectField.jsx';
 import FileField from '../../form/FileField.jsx';
-import SignupSuccess from '../../form/SignupSuccess.jsx';
+import SignupSuccess from './SignupSuccess.jsx';
 import FormError from '../../form/FormError.jsx';
 import Sheet from '../../layout/Sheet.jsx';
 import ErrorSummary from '../../form/ErrorSummary.jsx';
@@ -26,7 +26,7 @@ const maxFileSize = 2 * 1024 * 1024;
 const registrationSchema = z.object({
     username:z
     .string()
-    .min(3,"username atleast must be 3 characters")
+    .min(3,"username at least must be 3 characters")
     .max(30,"username must be 30 chracters or less"),
 
     email:z
@@ -38,16 +38,16 @@ const registrationSchema = z.object({
        const isTaken = await checkEmailTaken(email);
       return !isTaken;
     },{
-      message:"That email is already registered"
+      message:"That email is already registered."
     }),
 
     password:z
     .string()
-    .min(6,"password must be atleast 6 characters"),
+    .min(6,"Password must be at least 6 characters"),
 
     confirmPassword:z
     .string()
-    .min(1,"please confirm your password"),
+    .min(1,"Please confirm your password"),
 
     country: z
     .string()
@@ -69,7 +69,7 @@ const registrationSchema = z.object({
 })
 
 .refine((data)=> data.password === data.confirmPassword, {
-  message:"password do not match",
+  message:"Passwords do not match",
   path: ["confirmPassword"],
 })
 export default function SignupForm(){
@@ -109,8 +109,8 @@ export default function SignupForm(){
     }
   };
     return(
-        <Sheet>
-          {createdUsername !== null ? <SignupSuccess username={createdUsername} /> 
+        <Sheet title={createdUsername == null ?'Sign up.':`Welcome ${createdUsername}`}>
+          {createdUsername !== null ? <SignupSuccess  /> 
           :
           <>
           <ErrorSummary errors={errors} submitCount={submitCount} onFocusField={setFocus}/>
@@ -118,38 +118,42 @@ export default function SignupForm(){
             <TextField
              label="User Name:" 
              error={errors.username?.message}
+             autoComplete='on'
              {...register("username")}
             />
             <TextField
             type="email"
           label="Email Address:" 
           error={errors.email?.message}
+          autoComplete='email'
           {...register("email")}
             />
             <TextField 
             type='password'
              label="Password:"
              error={errors.password?.message}
+             autoComplete='on'
              {...register("password")}
             />
             <TextField 
             type='password'
             label='Confirm Password:'
             error={errors.confirmPassword?.message}
+            autoComplete='on'
             {...register("confirmPassword")}
             />
               <Controller 
             name='country'
             control={control}
             render={({field}) =>(
-            <SelectField {...field} label='country' options={countries}  error={errors.country?.message} />
+            <SelectField {...field} label='Country : ' options={countries}  error={errors.country?.message} />
           )}
             />
             <Controller 
              name="avatar"
              control={control}
              render={({ field: { value, ...restField }}) => (
-              <FileField {...restField} file={value} label='Profile picture' error={errors.avatar?.message} />
+              <FileField {...restField} file={value} label='Profile picture: ' error={errors.avatar?.message} />
              )}
             />
             <FormError message={errors.root?.server?.message}/>
