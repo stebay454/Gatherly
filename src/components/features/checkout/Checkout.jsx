@@ -1,15 +1,28 @@
 import {useState} from 'react';
 import {useForm,FormProvider} from 'react-hook-form';
+import {zodResolver} from '@hookform/resolvers/zod';
 import Sheet from "../../layout/Sheet";
 import Stepper from './Stepper.jsx';
 import DetailsStep from './DetailsStep.jsx';
 import ReviewStep from './ReviewStep.jsx';
 import BillingStep from './BillingStep.jsx';
+import {orderSchema} from '../../../schemas/checkout.js';
 export default function Checkout({onNavigate}){
     const [step,setStep] = useState(0);
     const formMethods = useForm({
-        mode: 'onTouched',
-
+        resolver: zodResolver(orderSchema),
+        defaultValues: {
+            quantity: 1,
+            attendees:[{
+                name: ''
+            }],
+            address: '',
+            city: '',
+            cardNumber: '',
+            expiry : '',
+            cvc: '',
+            promo: ''
+        }
     })
     return(
         <Sheet title='Checkout'>

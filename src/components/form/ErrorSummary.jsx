@@ -12,7 +12,7 @@ export default function ErrorSummary({errors,submitCount,onFocusField}){
     if(submitCount > 0 && errorList.length > 0 && containerRef.current){
       containerRef.current.focus();
     }
-  },[submitCount,errorList]);
+  },[submitCount]);
 
   if(submitCount === 0 || errorList.length === 0){
     return null;
