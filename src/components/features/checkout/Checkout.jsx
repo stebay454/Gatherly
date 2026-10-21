@@ -11,6 +11,7 @@ export default function Checkout({onNavigate}){
     const [step,setStep] = useState(0);
     const formMethods = useForm({
         resolver: zodResolver(orderSchema),
+        mode:'onTouched',
         defaultValues: {
             quantity: 1,
             attendees:[{

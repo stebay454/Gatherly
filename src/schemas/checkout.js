@@ -5,17 +5,21 @@ import {z} from 'zod';
     .max(60,"Attendee name must be 60 characters or less")
  });
  export const detailsSchema = z.object({
-    quantity: z.
-    coerce.number()
+    quantity: z.preprocess((val) => {
+     if (val === "" || val === undefined || val === null) return undefined;
+      const num = Number(val);
+      return Number.isNaN(num) ? "NOT_A_NUMBER" : num;
+    },
+    z.number({error: "Enter a number of tickets from 1 to 6"})
+    .int("Quantity must be whole number")
     .min(1,"Minimum quantity is one")
     .max(6,"Choose one to six tickets.")
-    .int("Quantity must be whole number"),
-
+    ),
     attendees:z.
     array(attendeesSchema)
     .min(1,"Minimum attendee is one.")
     .max(6,"Maximum attendee is six.")
- });
+});
   
  export const billingSchema = z.object({
     address: z
@@ -24,17 +28,15 @@ import {z} from 'zod';
     
     city:z
     .string()
-    .min(2,"City must be atleast 2 characters"),
+    .min(2,"City must be at least 2 characters"),
     
     cardNumber:z
     .string()
-    .refine((text)=>{
-      const trimmedText = text.trim();
-      return /^\b\d{4}[ -]?\d{4}[ -]?\d{4}[ -]?\d{4}\b$/
-.test(trimmedText);
-    },{
-      message:"Enter a 16 digit card number."
-    }),
+    .trim()
+    .regex(
+      /^\d{4}[ -]?\d{4}[ -]?\d{4}[ -]?\d{4}$/,
+      { message: "Enter a 16 digit card number." }
+    ),
 
     expiry: z.
     string()
@@ -51,7 +53,9 @@ import {z} from 'zod';
 
     promo:z
     .string()
+    .trim()
     .optional()
+    .or(z.literal(''))
  });
 
  export const orderSchema = detailsSchema.extend(billingSchema.shape);
