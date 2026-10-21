@@ -1,4 +1,5 @@
 import {z} from 'zod';
+import { checkPromo } from '../api/fakeApi.js';
  const attendeesSchema = z.object({
     name:z.string().trim()
     .min(2,"Attendee name must be at least 2 characters.")
@@ -56,6 +57,13 @@ import {z} from 'zod';
     .trim()
     .optional()
     .or(z.literal(''))
+    .refine(async(promo)=> {
+      if(!promo) return true;
+      const isTaken = await checkPromo(promo);
+      return !isTaken;
+    },{
+      message:"That promo is already registered"
+    })
  });
 
  export const orderSchema = detailsSchema.extend(billingSchema.shape);

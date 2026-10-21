@@ -18,3 +18,10 @@ export async function submitSignup(data){
     throw error;
   }
 }
+export async function checkPromo(promo){
+  const takenPromo = ['promos','codes','peace'];
+  if(!promo) return false;
+  await new Promise((resolve)=> (setTimeout(resolve,800)));
+  const isTaken = takenPromo.includes(promo.toLowerCase().trim());
+  return isTaken;
+}
