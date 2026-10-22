@@ -36,14 +36,14 @@ import { checkPromo } from '../api/fakeApi.js';
     .trim()
     .regex(
       /^\d{4}[ -]?\d{4}[ -]?\d{4}[ -]?\d{4}$/,
-      { message: "Enter a 16 digit card number." }
+      { message: "Card number must be 16 digits." }
     ),
 
     expiry: z.
     string()
     .regex(
     /^(0[1-9]|1[0-2])\/([0-9]{2})$/,
-    {message: "Must be in MM/YY format"}
+    {message: "Expiry date must be in MM/YY format"}
     ),
 
     cvc: z

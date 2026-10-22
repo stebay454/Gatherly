@@ -25,3 +25,13 @@ export async function checkPromo(promo){
   const isTaken = takenPromo.includes(promo.toLowerCase().trim());
   return isTaken;
 }
+
+export async function submitOrder(data){
+ await new Promise((resolve) => setTimeout(resolve,1200));
+
+ if(data?.promo?.toLowerCase().trim() === 'reject'){
+  const error = new Error("This order cannot be processed because this promotional code has expired.")
+  error.status = 409;
+  throw error;
+ }
+}

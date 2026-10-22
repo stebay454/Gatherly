@@ -20,7 +20,7 @@ export default function DetailsStep(){
     }
     return(
         <div>
-            <h2 tabIndex={-1} ref={focusRef}>Details Step.</h2>
+            <h2 tabIndex={-1} ref={focusRef} className='font-manrope text-2xl mb-2 text-light-text dark:text-dark-text'>Details Step.</h2>
             <TextField 
             label='Number of tickets'
             error={errors.quantity?.message}
@@ -28,8 +28,8 @@ export default function DetailsStep(){
             inputMode='numeric'
             {...register('quantity',{onChange: handleQuantityChange})}
             />
-            <fieldset>
-                <legend>Attendee names</legend>
+            <fieldset className='mt-4'>
+                <legend className='font-manrope text-light-text dark:text-dark-text'>Attendee names:</legend>
                 {fields.map((field,index) =>(
                     <TextField 
                     key={field.id} 

@@ -157,7 +157,7 @@ export default function SignupForm({onNavigate}){
              )}
             />
             <FormError message={errors.root?.server?.message}/>
-            <button disabled={isSubmitting} className='font-manrope py-2 px-2 rounded-lg mt-2 bg-light-accent text-dark-text cursor-pointer disabled:cursor-not-allowed' type='submit'>{isSubmitting ?'Creating account...': 'Register'}</button>
+            <button disabled={isSubmitting} className='font-manrope py-2 px-2 rounded-lg mt-2 bg-light-accent text-dark-text cursor-pointer disabled:cursor-not-allowed disabled:bg-dark-accent' type='submit'>{isSubmitting ?'Creating account...': 'Register'}</button>
           </form>
           </>
 }
